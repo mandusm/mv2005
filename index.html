@@ -92,10 +92,12 @@
 
 <script>
 	$(document).ready(function(){
+		var deAkey = atob("QUtJQUo3VEhPNTJJWTROVE9VR0E=");
+		var deSkey = atob("VWdiLy9mV0YyYzh3eTNSSXhNUHdENVNlS2hKbkU2ODBnQU5ST2Rndg==");
 		console.log("Page Ready");
 		var dynamodb = new AWS.DynamoDB({
-			accessKeyId: 'AKIAJV2LE6PTED3QGFQQ', 
-			secretAccessKey: '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',
+			accessKeyId: deAkey, 
+			secretAccessKey: deSkey,
 			region: 'us-west-2'
 		});
 
