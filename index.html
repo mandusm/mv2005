@@ -70,6 +70,11 @@
 				<div class="col-lg-1"><div class="well fail">N/A</div></div>
         		<div class="col-lg-3"></div>
         	</div><!--e:vote-->
+        	<div id="msg" style="display:none" class="row">
+        		<div class="col-lg-3"></div>
+        		<div class="col-lg-6"><div class="alert alert-success" role="alert">Please wait while I add your vote to the system...</div></div>
+        		<div class="col-lg-3"></div>
+        	</div>
         </div><!--e:body-container-->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -162,7 +167,7 @@
 				location.reload();
 			})
 
-			alert("Thank you for your vote! Please wait for the page to reload for your vote to be counted.")
+			$("#msg").show();
 
 		})
 
@@ -186,7 +191,7 @@
 				location.reload();
 			})
 
-			alert("Thank you for your vote! Please wait for the page to reload for your vote to be counted.")
+			$("#msg").show();
 
 		})
 
