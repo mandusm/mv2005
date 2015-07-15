@@ -35,7 +35,7 @@
         	<div class="row">
         		<div class="col-lg-12" style="text-align:center; color:#fff">
         			<h1>Marais Viljoen Class of 2005</h1>
-        			<p>Please vote for the Date you would prefer to have the Reunion on.</p>
+        			<p>Please vote for the date you want the event to occur on.</p>
         			<p>Please enter a valid E-Mail address as that will be our official communication method for the event details.</p>
         		</div>
         	</div><!--e:Announce-->
@@ -44,6 +44,11 @@
         		<div class="col-lg-4"><input id="emailaddy" class="form-control" placeholder="E-Mail Address" name="email" /></div>
         		<div class="col-lg-4"></div>
         	</div><!--e:row-->
+        	<div id="msg" style="display:none" class="row">
+        		<div class="col-lg-3"></div>
+        		<div class="col-lg-6"><div class="alert alert-success" role="alert">Please wait while I add your vote to the system...</div></div>
+        		<div class="col-lg-3"></div>
+        	</div>
         	<div style="text-align:center; padding-top:40px" class="row">
         		<div class="col-lg-3"></div>
         		<div class="col-lg-2"><button type="button" class="btn btn-success">24 October</button></div>
@@ -70,6 +75,7 @@
 				<div class="col-lg-1"><div class="well fail">N/A</div></div>
         		<div class="col-lg-3"></div>
         	</div><!--e:vote-->
+        	
         </div><!--e:body-container-->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -86,10 +92,12 @@
 
 <script>
 	$(document).ready(function(){
+		var deAkey = atob("QUtJQUo3VEhPNTJJWTROVE9VR0E=");
+		var deSkey = atob("VWdiLy9mV0YyYzh3eTNSSXhNUHdENVNlS2hKbkU2ODBnQU5ST2Rndg==");
 		console.log("Page Ready");
 		var dynamodb = new AWS.DynamoDB({
-			accessKeyId: 'AKIAJV2LE6PTED3QGFQQ', 
-			secretAccessKey: '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',
+			accessKeyId: deAkey, 
+			secretAccessKey: deSkey,
 			region: 'us-west-2'
 		});
 
@@ -162,6 +170,8 @@
 				location.reload();
 			})
 
+			$("#msg").show();
+
 		})
 
 		$(".btn-danger").click(function(){
@@ -183,6 +193,8 @@
 			dynamodb.putItem(params,function(e,d){
 				location.reload();
 			})
+
+			$("#msg").show();
 
 		})
 
