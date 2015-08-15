@@ -309,19 +309,19 @@
 					}
 				})
 
-				function pollImage(url){
+				function pollImage(url,form){
 					console.log("polling image");
+					console.log(form);
 					$.ajax({
 				    	url: url,
 				    	type: 'GET'
 					}).done(function(data,status){
+						registerUser(form)
 						console.log(status);
-						$(".regMsg").hide();
-						$("#register").modal("hide");
-						location.reload();
+						
 					}).fail(function(data,status){
 						console.log(status);
-						setTimeout(pollImage(url),5000);
+						setTimeout(pollImage(url,form),5000);
 					})
 					
 				}
@@ -335,7 +335,11 @@
 					$.post('https://ao9l8hc5j4.execute-api.eu-west-1.amazonaws.com/v1/register', JSON.stringify(data), function(ret){
 						
 						
-					}).done(pollImage("https://s3-eu-west-1.amazonaws.com/coeus/mvpins2005/"+data.imageName))
+					}).done(function(){
+						$(".regMsg").hide();
+						$("#register").modal("hide");
+						location.reload();
+					})
 				}
 
 				if ( !localStorage.getItem("welcome") ) {
@@ -434,7 +438,8 @@
 						    processData: false,
 						    url: url,
 						    data: globalImage
-						}).done(registerUser(form));
+						}).done(pollImage("https://s3-eu-west-1.amazonaws.com/coeus/mvpins2005/"+form.imageName,form))
+						//.done(registerUser(form));
 					    
 					})
 				})
