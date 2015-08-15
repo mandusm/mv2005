@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.5.min.js"></script>
+		<link rel="stylesheet" href="http://bootswatch.com/flatly/bootstrap.min.css">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <style>
+        	body{
+        		background-color: #004181
+        	}
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div class="container">
+        	<div style="padding-top:40px" class="row">
+        		<div style="text-align:center" class="col-lg-12">
+        			<img src="http://ysn.co.za/sites/default/files/crests/Marais_Viljoen.jpg" class="img-circle" />
+        		</div>
+        	</div><!--e:row-logo-->
+        	<div class="row">
+        		<div class="col-lg-12" style="text-align:center; color:#fff">
+        			<h1>Marais Viljoen Class of 2005</h1>
+        			<p>If you are interested in attending a 10 year reunion please fill in your details below, and vote</p>
+        			<p>Please enter a valid E-Mail address as that will be our official communication method for the event details.</p>
+        		</div>
+        	</div><!--e:Announce-->
+        	<div class="row" style="padding-top:20px">
+        		<div class="col-lg-4"></div>
+        		<div class="col-lg-4"><input id="emailaddy" class="form-control" placeholder="E-Mail Address" name="email" /></div>
+        		<div class="col-lg-4"></div>
+        	</div><!--e:row-->
+        	<div id="msg" style="display:none" class="row">
+        		<div class="col-lg-3"></div>
+        		<div class="col-lg-6"><div class="alert alert-success" role="alert">Please wait while I add your vote to the system...</div></div>
+        		<div class="col-lg-3"></div>
+        	</div>
+        	<div style="text-align:center; padding-top:40px" class="row">
+        		<div class="col-lg-3"></div>
+        		<div class="col-lg-2"><button type="button" class="btn btn-success">I'm in!</button></div>
+        		<div class="col-lg-3">
+	    			<div class="progress">
+				  		<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+					    	<span class="sr-only"></span>
+					  	</div>
+					</div>
+				</div>
+				<div class="col-lg-1"><div class="well success">N/A</div></div>
+        		<div class="col-lg-3"></div>
+        	</div><!--e:vote-->
+        	<div style="text-align:center;padding-top:40px" class="row">
+        		<div class="col-lg-3"></div>
+        		<div class="col-lg-2"><button type="button" class="btn btn-danger">No, go away!</button></div>
+        		<div class="col-lg-3">
+	    			<div class="progress">
+				  		<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+					    	<span class="sr-only"></span>
+					  	</div>
+					</div>
+				</div>
+				<div class="col-lg-1"><div class="well fail">N/A</div></div>
+        		<div class="col-lg-3"></div>
+        	</div><!--e:vote-->
+        	
+        </div><!--e:body-container-->
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>
+
+<script>
+	$(document).ready(function(){
+		var deAkey = atob("QUtJQUo3VEhPNTJJWTROVE9VR0E=");
+		var deSkey = atob("VWdiLy9mV0YyYzh3eTNSSXhNUHdENVNlS2hKbkU2ODBnQU5ST2Rndg==");
+		console.log("Page Ready");
+		var dynamodb = new AWS.DynamoDB({
+			accessKeyId: deAkey, 
+			secretAccessKey: deSkey,
+			region: 'us-west-2'
+		});
+
+		//Get Total Yes Votes 
+		var params = {
+			KeyConditions: {
+				vote: {
+					ComparisonOperator: "EQ",
+					AttributeValueList: [{
+						S: "Yes"
+					}]
+				}
+			},
+			TableName: "mv2010"
+		}
+
+		var getYes = dynamodb.query(params);
+		getYes.on("success",function(d){
+			yes = d.data.Count;
+			$(".well.success").html(d.data.Count)
+		}).on("complete",function(){
+
+
+			//Get Total No Votes 
+			var params = {
+				KeyConditions: {
+					vote: {
+						ComparisonOperator: "EQ",
+						AttributeValueList: [{
+							S: "No"
+						}]
+					}
+				},
+				TableName: "mv2010"
+			}
+
+			dynamodb.query(params,function(e,x){
+				no = x.Count;
+				$(".well.fail").html(x.Count);
+						max = Math.max(yes,no);
+						persYes = (yes/max)*100;
+						persNo = (no/max)*100;
+						console.log("Yes: "+ persYes + " No: " + persNo);
+						$(".progress-bar-danger").css("width",persNo+"%");
+						$(".progress-bar-success").css("width",persYes+"%");
+						
+
+			})
+		})
+		getYes.send();
+
+
+		$(".btn-success").click(function(){
+			var email = $("#emailaddy").val();
+			console.log("Adding Yes Vote for " + email);
+
+			var params = {
+				Item: {
+					vote: {
+						S: "Yes"
+					},
+					email: {
+						S: email
+					}
+				},
+				TableName: 'mv2010'
+			}
+
+			dynamodb.putItem(params,function(e,d){
+				location.reload();
+			})
+
+			$("#msg").show();
+
+		})
+
+		$(".btn-danger").click(function(){
+			var email = $("#emailaddy").val();
+			console.log("Adding No Vote for " + email);
+
+			var params = {
+				Item: {
+					vote: {
+						S: "No"
+					},
+					email: {
+						S: email
+					}
+				},
+				TableName: 'mv2010'
+			}
+
+			dynamodb.putItem(params,function(e,d){
+				location.reload();
+			})
+
+			$("#msg").show();
+
+		})
+
+	})
+</script>
