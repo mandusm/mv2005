@@ -249,23 +249,29 @@
 				    return o;
 				};
 
+				var genBG = function(){
+					var rand = Math.floor((Math.random() * 6));
+					var bg = ['fireblue.jpg','petals.jpg','splashpink.jpg','twilight.jpg','flutterby.jpg','blossoms.jpg'];
+					return 'img/'+bg[rand];
+				}
+
 				var genPin = function(curr){
 					//var RSVP = (curr.RSVP.BOOL = true ) ? ""
 					var pin = '<!--Pin-->  \
 					<div class="col-lg-3 col-sm-4"> \
 			            <div class="card hovercard"> \
-			                <div class="cardheader" style="background: url(\'http://www.f-covers.com/cover/flowers-nature-6-facebook-cover-timeline-banner-for-fb.jpg\')"> \
+			                <div class="cardheader" style="background: url(\''+genBG()+'\')"> \
 			                </div> \
 			                <div class="avatar"> \
 			                    <img alt="" src="https://s3-eu-west-1.amazonaws.com/coeus/mvpins2005/'+curr.imageName.S+'"> \
 			                </div> \
 			                <div class="info"> \
 			                    <div class="title"> \
-			                        <a target="_blank" href="#">'+curr.fullName.S+'</a> \
+			                        <a target="_blank" href="#">'+decodeURIComponent(curr.fullName.S)+'</a> \
 			                    </div> \
-			                    <div class="desc">'+curr.currWork.S+'</div> \
+			                    <div class="desc">'+decodeURIComponent(curr.currWork.S)+'</div> \
 			                    <hr style="margin:2px"/> \
-			                    <div class="desc">'+curr.message.S+'</div> \
+			                    <div class="desc">'+decodeURIComponent(curr.message.S)+'</div> \
 			                    <hr style="margin:2px"/> \
 			                    <div class="desc">I will ' +  ( (curr.RSVP.BOOL == true) ? "" : "NOT") + ' be attending!</div> \
 			                </div> \
@@ -322,6 +328,10 @@
 				var registerUser = function(data){
 					console.log("File Uploaded");
 					console.log(data);
+					data.fullName=encodeURIComponent(data.fullName);
+					data.currWork=encodeURIComponent(data.currWork);
+					data.message=encodeURIComponent(data.message);
+					
 					$.post('https://ao9l8hc5j4.execute-api.eu-west-1.amazonaws.com/v1/register', JSON.stringify(data), function(ret){
 						
 						
